@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace GenParse.Lexing;
+namespace SharpParse.Lexing;
 
 public class Lexon<LexonType>
 {

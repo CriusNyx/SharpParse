@@ -1,9 +1,9 @@
 using System.Text.RegularExpressions;
-using GenParse.Functional;
-using GenParse.Lexing;
-using GenParse.Parsing;
+using SharpParse.Functional;
+using SharpParse.Lexing;
+using SharpParse.Parsing;
 
-namespace GenParse.Grammar;
+namespace SharpParse.Grammar;
 
 public enum GrammarLexonType
 {

@@ -1,7 +1,7 @@
 using System.Text;
-using GenParse.Functional;
+using SharpParse.Functional;
 
-namespace GenParse.Util
+namespace SharpParse.Util
 {
   public enum CColor
   {

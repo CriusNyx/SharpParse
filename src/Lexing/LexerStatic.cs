@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
-using GenParse.Functional;
+using SharpParse.Functional;
 
-namespace GenParse.Lexing;
+namespace SharpParse.Lexing;
 
 public static class LexerStatic
 {

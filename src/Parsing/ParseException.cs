@@ -1,5 +1,5 @@
-using GenParse.Functional;
-using GenParse.Parsing;
+using SharpParse.Functional;
+using SharpParse.Parsing;
 
 public class ParseException<LexonType>(FailedParseResult<LexonType> failedParseResult)
   : Exception(GenerateMessage(failedParseResult))

@@ -1,6 +1,6 @@
 using System.Reflection;
-using GenParse.Functional;
-using GenParse.Parsing;
+using SharpParse.Functional;
+using SharpParse.Parsing;
 
 public static class Transformer
 {

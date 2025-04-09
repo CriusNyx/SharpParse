@@ -1,4 +1,4 @@
-namespace GenParse.Util
+namespace SharpParse.Util
 {
   public class Thunk<T>
   {

@@ -1,6 +1,6 @@
-using GenParse.Functional;
+using SharpParse.Functional;
 
-namespace GenParse.Parsing;
+namespace SharpParse.Parsing;
 
 public class ProductionRule<LexonType>
 {

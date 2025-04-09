@@ -1,8 +1,8 @@
 using System.Data;
-using GenParse.Functional;
-using GenParse.Lexing;
+using SharpParse.Functional;
+using SharpParse.Lexing;
 
-namespace GenParse.Parsing;
+namespace SharpParse.Parsing;
 
 public class Parser<LexonType>
 {

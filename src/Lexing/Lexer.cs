@@ -1,5 +1,5 @@
 using System.Text.RegularExpressions;
-using GenParse.Lexing;
+using SharpParse.Lexing;
 
 public abstract class Lexer { }
 

@@ -1,5 +1,5 @@
-using GenParse.Lexing;
-using GenParse.Parsing;
+using SharpParse.Lexing;
+using SharpParse.Parsing;
 
 public interface CustomParser<LexonType>
 {

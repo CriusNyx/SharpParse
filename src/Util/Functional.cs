@@ -1,6 +1,6 @@
 using System.Timers;
 
-namespace GenParse.Functional
+namespace SharpParse.Functional
 {
   public static class Functional
   {
