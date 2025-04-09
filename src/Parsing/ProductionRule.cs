@@ -2,12 +2,12 @@ using SharpParse.Functional;
 
 namespace SharpParse.Parsing;
 
-public class ProductionRule<LexonType>
+public class ProductionRule
 {
   public readonly string name;
-  public readonly ProductionSymbol<LexonType>[] symbols;
+  public readonly ProductionSymbol[] symbols;
 
-  public ProductionRule(string name, ProductionSymbol<LexonType>[] symbols)
+  public ProductionRule(string name, ProductionSymbol[] symbols)
   {
     this.name = name;
     this.symbols = symbols;

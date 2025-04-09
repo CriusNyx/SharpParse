@@ -5,10 +5,10 @@ namespace SharpParse.Lexing;
 
 public static class LexerStatic
 {
-  public static TLexon[] Lex<TLexon, TLexonType>(
+  public static Lexon[] Lex(
     string code,
-    (TLexonType ruleType, Regex regex)[] rules,
-    Func<TLexonType, string, int, TLexon> lexonConstructor,
+    (string ruleType, Regex regex)[] rules,
+    Func<string, string, int, Lexon> lexonConstructor,
     int startIndex = 0
   )
   {
@@ -17,7 +17,7 @@ public static class LexerStatic
     {
       code = code.Substring(index);
     }
-    List<TLexon> lexons = new List<TLexon>();
+    List<Lexon> lexons = new List<Lexon>();
     while (TryLex(code, out var lexonType, out var lexicalString, out code!, rules))
     {
       lexons.Add(lexonConstructor(lexonType!, lexicalString!, index));
@@ -53,16 +53,16 @@ public static class LexerStatic
     return false;
   }
 
-  internal static string LexonsToSource<LexonType>(Lexon<LexonType>[] lexons, string separator = "")
+  internal static string LexonsToSource(Lexon[] lexons, string separator = "")
   {
     return string.Join(separator, lexons.Map(x => x.sourceCode));
   }
 
-  internal static string PrintLexons<LexonType>(Lexon<LexonType>[] lexons)
+  internal static string PrintLexons<LexonType>(Lexon[] lexons)
   {
     var identLength = lexons.Max(x => x.lexonType.ToString()!.Length) + 5;
 
-    string GenerateLexonStrings(Lexon<LexonType> lexons)
+    string GenerateLexonStrings(Lexon lexons)
     {
       var lexonString = lexons.lexonType.ToString()!.PadRight(identLength);
       var sourceString = lexons.sourceCode;

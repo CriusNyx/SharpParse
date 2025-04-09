@@ -4,23 +4,17 @@ namespace SharpParse.Parsing;
 
 public static class ASTNodeSearchExtensions
 {
-  public static ASTNode<LexonType>? MatchPath<LexonType>(
-    this ASTNode<LexonType>? node,
-    string search
-  )
+  public static ASTNode? MatchPath(this ASTNode? node, string search)
   {
     return MatchPath(node, search.Split('.'));
   }
 
-  public static ASTNode<LexonType>? MatchPath<LexonType>(
-    this ASTNode<LexonType>? node,
-    string[] search
-  )
+  public static ASTNode? MatchPath(this ASTNode? node, string[] search)
   {
     return search.Reduce(node, (search, node) => node.Match(search));
   }
 
-  public static ASTNode<LexonType>? Match<LexonType>(this ASTNode<LexonType>? node, string search)
+  public static ASTNode? Match(this ASTNode? node, string search)
   {
     if (TryMatch(node, search, out var output))
     {
@@ -29,10 +23,7 @@ public static class ASTNodeSearchExtensions
     return null;
   }
 
-  public static (ASTNode<LexonType>?, ASTNode<LexonType>?) Match<LexonType>(
-    this ASTNode<LexonType>? node,
-    (string, string) search
-  )
+  public static (ASTNode?, ASTNode?) Match<LexonType>(this ASTNode? node, (string, string) search)
   {
     if (TryMatch(node, search, out var output))
     {
@@ -41,8 +32,8 @@ public static class ASTNodeSearchExtensions
     return (null, null);
   }
 
-  public static (ASTNode<LexonType>?, ASTNode<LexonType>?, ASTNode<LexonType>?) Match<LexonType>(
-    this ASTNode<LexonType>? node,
+  public static (ASTNode?, ASTNode?, ASTNode?) Match<LexonType>(
+    this ASTNode? node,
     (string, string, string) search
   )
   {
@@ -53,21 +44,17 @@ public static class ASTNodeSearchExtensions
     return (null, null, null);
   }
 
-  public static bool TryMatch<LexonType>(
-    this ASTNode<LexonType>? node,
-    string search,
-    out ASTNode<LexonType> result
-  )
+  public static bool TryMatch(this ASTNode? node, string search, out ASTNode result)
   {
     var output = TryMatch(node, [search], out var arr);
     result = arr[0];
     return output;
   }
 
-  public static bool TryMatch<LexonType>(
-    this ASTNode<LexonType>? node,
+  public static bool TryMatch(
+    this ASTNode? node,
     (string, string) search,
-    out (ASTNode<LexonType>, ASTNode<LexonType>) nodes
+    out (ASTNode, ASTNode) nodes
   )
   {
     var output = TryMatch(node, [search.Item1, search.Item2], out var result);
@@ -75,10 +62,10 @@ public static class ASTNodeSearchExtensions
     return output;
   }
 
-  public static bool TryMatch<LexonType>(
-    this ASTNode<LexonType>? node,
+  public static bool TryMatch(
+    this ASTNode? node,
     (string, string, string) search,
-    out (ASTNode<LexonType>, ASTNode<LexonType>, ASTNode<LexonType>) nodes
+    out (ASTNode, ASTNode, ASTNode) nodes
   )
   {
     var output = TryMatch(node, [search.Item1, search.Item2, search.Item3], out var result);
@@ -86,10 +73,10 @@ public static class ASTNodeSearchExtensions
     return output;
   }
 
-  public static bool TryMatch<LexonType>(
-    this ASTNode<LexonType>? node,
+  public static bool TryMatch(
+    this ASTNode? node,
     (string, string, string, string) search,
-    out (ASTNode<LexonType>, ASTNode<LexonType>, ASTNode<LexonType>, ASTNode<LexonType>) nodes
+    out (ASTNode, ASTNode, ASTNode, ASTNode) nodes
   )
   {
     var output = TryMatch(node, [search.Item1, search.Item2, search.Item3], out var result);
@@ -97,13 +84,9 @@ public static class ASTNodeSearchExtensions
     return output;
   }
 
-  public static bool TryMatch<LexonType>(
-    this ASTNode<LexonType>? node,
-    string[] search,
-    out ASTNode<LexonType>[] results
-  )
+  public static bool TryMatch(this ASTNode? node, string[] search, out ASTNode[] results)
   {
-    results = new ASTNode<LexonType>[search.Length];
+    results = new ASTNode[search.Length];
     if (node == null)
     {
       return false;
@@ -123,18 +106,12 @@ public static class ASTNodeSearchExtensions
     return i == search.Length;
   }
 
-  public static ASTNode<LexonType>[] MatchAll<LexonType>(
-    this ASTNode<LexonType> node,
-    string search
-  )
+  public static ASTNode[] MatchAll<LexonType>(this ASTNode node, string search)
   {
     return node.MatchAll([search]);
   }
 
-  public static ASTNode<LexonType>[] MatchAll<LexonType>(
-    this ASTNode<LexonType> node,
-    string[] search
-  )
+  public static ASTNode[] MatchAll(this ASTNode node, string[] search)
   {
     if (search.Contains(node.name))
     {

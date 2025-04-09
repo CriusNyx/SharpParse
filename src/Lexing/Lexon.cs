@@ -2,17 +2,17 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SharpParse.Lexing;
 
-public class Lexon<LexonType>
+public class Lexon
 {
   [NotNull]
-  public readonly LexonType lexonType;
+  public readonly string lexonType;
   public readonly string sourceCode;
   public readonly bool isSemantic;
   public readonly int index;
   public int length => sourceCode.Length;
   public int end => index + length;
 
-  public Lexon(LexonType lexonType, string sourceCode, bool isSemantic, int index)
+  public Lexon(string lexonType, string sourceCode, bool isSemantic, int index)
   {
     if (lexonType == null)
     {

@@ -3,19 +3,14 @@ using SharpParse.Lexing;
 
 namespace SharpParse.Parsing;
 
-public class ASTNode<LexonType>
+public class ASTNode
 {
   public readonly string name;
-  public readonly ProductionRule<LexonType>? productionRule;
-  public readonly ASTNode<LexonType>[] children;
-  public readonly Lexon<LexonType>[] lexons;
+  public readonly ProductionRule? productionRule;
+  public readonly ASTNode[] children;
+  public readonly Lexon[] lexons;
 
-  public ASTNode(
-    string name,
-    ProductionRule<LexonType>? productionRule,
-    ASTNode<LexonType>[] children,
-    Lexon<LexonType>[] lexons
-  )
+  public ASTNode(string name, ProductionRule? productionRule, ASTNode[] children, Lexon[] lexons)
   {
     this.name = name;
     this.productionRule = productionRule;

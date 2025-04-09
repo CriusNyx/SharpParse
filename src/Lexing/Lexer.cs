@@ -1,23 +1,21 @@
 using System.Text.RegularExpressions;
 using SharpParse.Lexing;
 
-public abstract class Lexer { }
-
-public class Lexer<TLexonType, TLexon> : Lexer
+public class Lexer
 {
-  (TLexonType ruleType, Regex regex)[] lexonRules;
-  Func<TLexonType, string, int, TLexon> lexonConstructor;
+  (string ruleType, Regex regex)[] lexonRules;
+  Func<string, string, int, Lexon> lexonConstructor;
 
   public Lexer(
-    (TLexonType ruleType, Regex regex)[] lexonRules,
-    Func<TLexonType, string, int, TLexon> lexonConstructor
+    (string ruleType, Regex regex)[] lexonRules,
+    Func<string, string, int, Lexon> lexonConstructor
   )
   {
     this.lexonRules = lexonRules;
     this.lexonConstructor = lexonConstructor;
   }
 
-  public TLexon[] Lex(string code, int startIndex = 0)
+  public Lexon[] Lex(string code, int startIndex = 0)
   {
     return LexerStatic.Lex(code, lexonRules, lexonConstructor, startIndex);
   }

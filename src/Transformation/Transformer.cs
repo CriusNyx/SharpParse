@@ -20,9 +20,9 @@ public static class Transformer
     }
   }
 
-  public static object Transform<T>(ASTNode<T> root)
+  public static object Transform(ASTNode root)
   {
-    Dictionary<ASTNode<T>, object> transformationMap = new Dictionary<ASTNode<T>, object>();
+    Dictionary<ASTNode, object> transformationMap = new Dictionary<ASTNode, object>();
 
     // Transform each AST node into it's corresponding language node.
     root.Crawl(
@@ -37,7 +37,7 @@ public static class Transformer
       }
     );
 
-    return ResolveNodeToFinalForm<T>(root, transformationMap)!;
+    return ResolveNodeToFinalForm(root, transformationMap)!;
   }
 
   private static void AssignMember(object target, MemberInfo member, object value)
@@ -52,11 +52,11 @@ public static class Transformer
     }
   }
 
-  private static void AssignField<T>(
-    Dictionary<ASTNode<T>, object> transformationMap,
+  private static void AssignField(
+    Dictionary<ASTNode, object> transformationMap,
     object value,
     FieldInfo field,
-    ASTNode<T> result
+    ASTNode result
   )
   {
     if (transformationMap.TryGetValue(result, out var transformedValue))
@@ -85,7 +85,7 @@ public static class Transformer
     }
   }
 
-  private static object? TransformNodeIntoBaseObject<T>(ASTNode<T> node)
+  private static object? TransformNodeIntoBaseObject(ASTNode node)
   {
     if (node.name.EndsWith("*"))
     {
@@ -95,9 +95,7 @@ public static class Transformer
     if (transformType != null)
     {
       var value = (
-        transformType
-          .GetConstructor(new Type[] { typeof(ASTNode<T>) })
-          ?.Invoke(new object[] { node })
+        transformType.GetConstructor(new Type[] { typeof(ASTNode) })?.Invoke(new object[] { node })
         ?? transformType.GetConstructor(new Type[] { })?.Invoke(new object[] { })
       ).NotNull();
 
@@ -125,14 +123,14 @@ public static class Transformer
     return null;
   }
 
-  private static object? ResolveNodeToFinalForm<T>(
-    ASTNode<T> node,
-    Dictionary<ASTNode<T>, object> transformationMap
+  private static object? ResolveNodeToFinalForm(
+    ASTNode node,
+    Dictionary<ASTNode, object> transformationMap
   )
   {
     foreach (var child in node.children)
     {
-      var childNodeResolution = ResolveNodeToFinalForm<T>(child, transformationMap);
+      var childNodeResolution = ResolveNodeToFinalForm(child, transformationMap);
       if (childNodeResolution != null)
       {
         transformationMap[child] = childNodeResolution;
