@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace SharpParse.Parsing;
 
 public class ProductionSymbol
@@ -19,5 +21,26 @@ public class ProductionSymbol
   public override string ToString()
   {
     return NameWithMod;
+  }
+
+  internal static ProductionSymbol Infer(string symbol)
+  {
+    if (string.IsNullOrEmpty(symbol))
+    {
+      throw new ArgumentException("Cannot infer a symbol from an empty string.");
+    }
+    char lastChar = symbol[symbol.Length - 1];
+    char? modifierCharacter = null;
+    if (Regex.IsMatch(lastChar.ToString(), GrammarLexonRules.modifierCharacterRegex))
+    {
+      modifierCharacter = lastChar;
+      symbol = symbol.Substring(0, symbol.Length - 1);
+    }
+    var firstChar = symbol[0];
+    return new ProductionSymbol(
+      symbol,
+      char.IsLower(firstChar) ? symbol : null!,
+      modifierCharacter
+    );
   }
 }

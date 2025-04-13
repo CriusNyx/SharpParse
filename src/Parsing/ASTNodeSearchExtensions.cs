@@ -23,7 +23,7 @@ public static class ASTNodeSearchExtensions
     return null;
   }
 
-  public static (ASTNode?, ASTNode?) Match<LexonType>(this ASTNode? node, (string, string) search)
+  public static (ASTNode?, ASTNode?) Match(this ASTNode? node, (string, string) search)
   {
     if (TryMatch(node, search, out var output))
     {
@@ -32,7 +32,7 @@ public static class ASTNodeSearchExtensions
     return (null, null);
   }
 
-  public static (ASTNode?, ASTNode?, ASTNode?) Match<LexonType>(
+  public static (ASTNode?, ASTNode?, ASTNode?) Match(
     this ASTNode? node,
     (string, string, string) search
   )

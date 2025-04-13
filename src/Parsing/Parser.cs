@@ -11,6 +11,14 @@ public class Parser
   public readonly IReadOnlyDictionary<string, CustomParser> customParsers =
     new Dictionary<string, CustomParser>();
 
+  /// <summary>
+  /// Used to generate unexpected symbols for rules.
+  ///
+  /// The head of a particular production rule is the set of symbols that are expected to start it.
+  /// </summary>
+  /// <typeparam name="string"></typeparam>
+  /// <typeparam name="string[]"></typeparam>
+  /// <returns></returns>
   private static Dictionary<string, string[]> headCache = new Dictionary<string, string[]>();
 
   public Parser(ProductionSet[] productionSets, CustomParser[] customParsers = null!)
@@ -23,6 +31,7 @@ public class Parser
 
   public ASTNode? Parse(string rootSymbol, Lexon[] lexons)
   {
+    lexons = lexons.Filter(x => x.isSemantic);
     var result = TryParse(rootSymbol, lexons);
     if (result is SuccessParseResult succ)
     {

@@ -17,4 +17,16 @@ public class ProductionSet
   {
     return string.Join("\n", rules.Map(x => x.ToString()));
   }
+
+  public static ProductionSet[] FromProductionRules(IEnumerable<ProductionRule> rules)
+  {
+    Dictionary<string, List<ProductionRule>> dict = new Dictionary<string, List<ProductionRule>>();
+
+    foreach (var rule in rules)
+    {
+      dict.AddOrGet(rule.name, () => new List<ProductionRule>()).Add(rule);
+    }
+
+    return dict.Select((pair) => new ProductionSet(pair.Key, pair.Value.ToArray())).ToArray();
+  }
 }

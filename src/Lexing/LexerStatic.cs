@@ -5,12 +5,7 @@ namespace SharpParse.Lexing;
 
 public static class LexerStatic
 {
-  public static Lexon[] Lex(
-    string code,
-    (string ruleType, Regex regex)[] rules,
-    Func<string, string, int, Lexon> lexonConstructor,
-    int startIndex = 0
-  )
+  public static Lexon[] Lex(string code, LexonRule[] rules, int startIndex = 0)
   {
     int index = startIndex;
     if (index != 0)
@@ -18,21 +13,21 @@ public static class LexerStatic
       code = code.Substring(index);
     }
     List<Lexon> lexons = new List<Lexon>();
-    while (TryLex(code, out var lexonType, out var lexicalString, out code!, rules))
+    while (TryLex(code, out var lexon, out code!, index, rules))
     {
-      lexons.Add(lexonConstructor(lexonType!, lexicalString!, index));
-      index += lexicalString!.Length;
+      lexons.Add(lexon);
+      index += lexon.sourceCode.Length;
     }
 
     return lexons.ToArray();
   }
 
-  static bool TryLex<T>(
+  static bool TryLex(
     string code,
-    out T? lexonType,
-    out string? lexicalString,
+    out Lexon lexon,
     out string? remainingCode,
-    (T ruleType, Regex regex)[] rules
+    int index,
+    LexonRule[] rules
   )
   {
     foreach (var rule in rules)
@@ -40,15 +35,14 @@ public static class LexerStatic
       var result = rule.regex.Match(code);
       if (result.Success)
       {
-        lexonType = rule.ruleType;
-        lexicalString = code.Substring(0, result.Length);
+        var lexonType = rule.name;
+        var lexicalString = code.Substring(0, result.Length);
         remainingCode = code.Substring(result.Length);
+        lexon = new Lexon(lexonType, lexicalString, rule.isSemantic, index);
         return true;
       }
     }
-
-    lexonType = default;
-    lexicalString = null;
+    lexon = null!;
     remainingCode = null;
     return false;
   }
