@@ -1,5 +1,3 @@
-using Microsoft.VisualBasic;
-
 namespace SharpParse.Functional;
 
 public static class Functional
@@ -179,6 +177,16 @@ public static class Functional
       return arr[index];
     }
     return default;
+  }
+
+  public static T? SafeGetStruct<T>(this T[] arr, int index)
+    where T : struct
+  {
+    if (index >= 0 && index < arr.Length)
+    {
+      return arr[index];
+    }
+    return null;
   }
 
   public static U? Safe<T, U>(this IReadOnlyDictionary<T, U> dict, T key) =>
@@ -410,5 +418,11 @@ public static class Functional
   public static U Pipe<T, U>(this T self, Func<T, U> func)
   {
     return func(self);
+  }
+
+  public static T Mutate<T>(this T self, Action<T> action)
+  {
+    action(self);
+    return self;
   }
 }

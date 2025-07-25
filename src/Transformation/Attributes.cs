@@ -1,3 +1,5 @@
+using SharpParse.Parsing;
+
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 public class ASTAttribute : Attribute { }
 
@@ -32,4 +34,18 @@ public interface ASTTransformer
 public interface ASTSimplifier
 {
   bool TrySimplify(out object result);
+}
+
+public static class ASTSimplifierExtensions
+{
+  public static T Simplify<T>(this ASTSimplifier source)
+  {
+    T output = (T)source;
+    object temp;
+    while (output is ASTSimplifier simplifier && simplifier.TrySimplify(out temp))
+    {
+      output = (T)temp;
+    }
+    return output;
+  }
 }
