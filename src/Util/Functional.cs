@@ -1,3 +1,5 @@
+using Microsoft.VisualBasic;
+
 namespace SharpParse.Functional;
 
 public static class Functional
@@ -372,5 +374,41 @@ public static class Functional
       return output;
     }
     throw new NullReferenceException();
+  }
+
+  public static bool EquivalentOrNull<T>(this T? self, T? other, Func<T, T, bool> comparator)
+    where T : class
+  {
+    if (self == null && other == null)
+      return true;
+
+    if (self == null || other == null)
+      return false;
+
+    return comparator(self, other);
+  }
+
+  public static IEnumerable<(T?, U?)> OuterZip<T, U>(
+    this IEnumerable<T> first,
+    IEnumerable<U> second
+  )
+  {
+    var firstE = first.GetEnumerator();
+    var secondE = second.GetEnumerator();
+
+    bool hasFirst = firstE.MoveNext();
+    bool hasSecond = secondE.MoveNext();
+    do
+    {
+      yield return (hasFirst ? firstE.Current : default, hasSecond ? secondE.Current : default);
+
+      hasFirst = hasFirst && firstE.MoveNext();
+      hasSecond = hasSecond && secondE.MoveNext();
+    } while (hasFirst | hasSecond);
+  }
+
+  public static U Pipe<T, U>(this T self, Func<T, U> func)
+  {
+    return func(self);
   }
 }

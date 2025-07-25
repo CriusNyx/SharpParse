@@ -1,5 +1,8 @@
 using System.Text.RegularExpressions;
 
+/// <summary>
+/// Specifies a rule for a lexon.
+/// </summary>
 public class LexonRule
 {
   public readonly string name;

@@ -1,6 +1,9 @@
 using SharpParse.Functional;
 using SharpParse.Parsing;
 
+/// <summary>
+/// Specifies a grammar for a programming language.
+/// </summary>
 public class LanguageGrammar
 {
   public readonly string rootSymbol;

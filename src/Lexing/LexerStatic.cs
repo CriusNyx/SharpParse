@@ -1,10 +1,19 @@
-using System.Text.RegularExpressions;
 using SharpParse.Functional;
 
 namespace SharpParse.Lexing;
 
+/// <summary>
+/// Static lexer.
+/// </summary>
 public static class LexerStatic
 {
+  /// <summary>
+  /// Scan a source code string and find all lexons.
+  /// </summary>
+  /// <param name="code"></param>
+  /// <param name="rules"></param>
+  /// <param name="startIndex"></param>
+  /// <returns></returns>
   public static Lexon[] Lex(string code, LexonRule[] rules, int startIndex = 0)
   {
     int index = startIndex;
@@ -22,6 +31,15 @@ public static class LexerStatic
     return lexons.ToArray();
   }
 
+  /// <summary>
+  /// Attempt to scan for a lexon and return it.
+  /// </summary>
+  /// <param name="code"></param>
+  /// <param name="lexon"></param>
+  /// <param name="remainingCode"></param>
+  /// <param name="index"></param>
+  /// <param name="rules"></param>
+  /// <returns></returns>
   static bool TryLex(
     string code,
     out Lexon lexon,
@@ -47,12 +65,24 @@ public static class LexerStatic
     return false;
   }
 
+  /// <summary>
+  /// Convert a set of lexons back into source code.
+  /// </summary>
+  /// <param name="lexons"></param>
+  /// <param name="separator"></param>
+  /// <returns></returns>
   internal static string LexonsToSource(Lexon[] lexons, string separator = "")
   {
     return string.Join(separator, lexons.Map(x => x.sourceCode));
   }
 
-  internal static string PrintLexons<LexonType>(Lexon[] lexons)
+  /// <summary>
+  /// Print all lexons
+  /// </summary>
+  /// <param name="lexons"></param>
+  /// <typeparam name="LexonType"></typeparam>
+  /// <returns></returns>
+  internal static string PrintLexons(Lexon[] lexons)
   {
     var identLength = lexons.Max(x => x.lexonType.ToString()!.Length) + 5;
 

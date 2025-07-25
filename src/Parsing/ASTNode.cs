@@ -3,11 +3,29 @@ using SharpParse.Lexing;
 
 namespace SharpParse.Parsing;
 
+/// <summary>
+/// An abstract syntax tree node.
+/// </summary>
 public class ASTNode
 {
+  /// <summary>
+  /// The name of the production rule used to parse the node.
+  /// </summary>
   public readonly string name;
+
+  /// <summary>
+  /// The production rule used to parse the node.
+  /// </summary>
   public readonly ProductionRule? productionRule;
+
+  /// <summary>
+  /// The children of this node.
+  /// </summary>
   public readonly ASTNode[] children;
+
+  /// <summary>
+  /// The set of lexons that comprise this node.
+  /// </summary>
   public readonly Lexon[] lexons;
 
   public ASTNode(string name, ProductionRule? productionRule, ASTNode[] children, Lexon[] lexons)
@@ -18,6 +36,10 @@ public class ASTNode
     this.lexons = lexons;
   }
 
+  /// <summary>
+  /// Print the program source code for this node.
+  /// </summary>
+  /// <returns></returns>
   public string PrintProgram()
   {
     var lines = PrintProgramPrivate();
@@ -29,6 +51,12 @@ public class ASTNode
     );
   }
 
+  /// <summary>
+  /// Internal method to print program.
+  /// </summary>
+  /// <param name="treeString"></param>
+  /// <param name="indentLength"></param>
+  /// <returns></returns>
   private (string treeString, string sourceString)[] PrintProgramPrivate(int indentLength = 0)
   {
     string indent = "";
@@ -47,11 +75,21 @@ public class ASTNode
     ];
   }
 
+  /// <summary>
+  /// Return a representation of the AST node for the program.
+  /// </summary>
+  /// <returns></returns>
   public override string ToString()
   {
     return $"ASTNode {name}";
   }
 
+  /// <summary>
+  /// Compute the position of the node in the source code.
+  /// </summary>
+  /// <param name="start"></param>
+  /// <param name="CalculatePosition("></param>
+  /// <returns></returns>
   public (int start, int length) CalculatePosition()
   {
     if (lexons.Length > 0)

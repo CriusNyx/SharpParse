@@ -1,9 +1,11 @@
 using System.Text.RegularExpressions;
-using SharpParse.Functional;
 using SharpParse.Parsing;
 
 namespace SharpParse;
 
+/// <summary>
+/// Set of lexons used to lex grammar specifications.
+/// </summary>
 public static class GrammarLexonType
 {
   public const string comment = "comment";
@@ -16,6 +18,9 @@ public static class GrammarLexonType
   public const string modifierCharacter = "modifierCharacter";
 }
 
+/// <summary>
+/// Set of lexon rules for parsing grammar specifications.
+/// </summary>
 public static class GrammarLexonRules
 {
   public const string modifierCharacterRegex = @"^[\*|\?]";
@@ -37,8 +42,21 @@ public static class GrammarLexonRules
   ];
 }
 
+/// <summary>
+/// Grammar specification for grammar files.
+/// The grammar for grammar files is the same as the following.
+///
+/// Grammar = GrammarStatement*;
+/// GrammarStatement = LexonRule | Production Rule;
+/// LexonRule = name modifierCharacter? equalSign regex semicolon;
+/// ProductionRule = name equalSign ProductionSymbol;
+/// ProductionSymbol = name modifierCharacter*;
+/// </summary>
 public static class GrammarFileGrammar
 {
+  /// <summary>
+  /// Rule for grammar specification grammar.
+  /// </summary>
   public static class RuleNames
   {
     public const string Grammar = "Grammar";
@@ -48,6 +66,10 @@ public static class GrammarFileGrammar
     public const string ProductionSymbol = "ProductionSymbol";
   }
 
+  /// <summary>
+  /// Production rules for grammar files.
+  /// </summary>
+  /// <returns></returns>
   public static ProductionRule[] ProductionRules =
   [
     new ProductionRule(RuleNames.Grammar, "GrammarStatement*"),

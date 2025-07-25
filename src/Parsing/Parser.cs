@@ -4,10 +4,26 @@ using SharpParse.Lexing;
 
 namespace SharpParse.Parsing;
 
+/// <summary>
+/// A parser for a specific language.
+/// </summary>
 public class Parser
 {
+  /// <summary>
+  /// Production sets for the language.
+  /// </summary>
+  /// <typeparam name="string"></typeparam>
+  /// <typeparam name="ProductionSet"></typeparam>
+  /// <returns></returns>
   public readonly IReadOnlyDictionary<string, ProductionSet> productionSets =
     new Dictionary<string, ProductionSet>();
+
+  /// <summary>
+  /// Custom parser for the language.
+  /// </summary>
+  /// <typeparam name="string"></typeparam>
+  /// <typeparam name="CustomParser"></typeparam>
+  /// <returns></returns>
   public readonly IReadOnlyDictionary<string, CustomParser> customParsers =
     new Dictionary<string, CustomParser>();
 
@@ -29,6 +45,12 @@ public class Parser
     this.customParsers = customParsers.ToDictionary(x => x.name);
   }
 
+  /// <summary>
+  /// Parse the lexons.
+  /// </summary>
+  /// <param name="rootSymbol"></param>
+  /// <param name="lexons"></param>
+  /// <returns></returns>
   public ASTNode? Parse(string rootSymbol, Lexon[] lexons)
   {
     lexons = lexons.Filter(x => x.isSemantic);

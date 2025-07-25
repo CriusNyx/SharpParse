@@ -18,6 +18,12 @@ public class ASTFieldAttribute : Attribute
   }
 }
 
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+public class SourceAttribute : Attribute { }
+
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+public class RangeAttribute : Attribute { }
+
 public interface ASTTransformer
 {
   object Transform();

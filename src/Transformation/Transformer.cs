@@ -40,6 +40,26 @@ public static class Transformer
     return ResolveNodeToFinalForm(root, transformationMap)!;
   }
 
+  private static void AssignTransformedMembers(object target, ASTNode node)
+  {
+    foreach (var member in target.GetType().GetMembers())
+    {
+      if (member.GetCustomAttribute<ASTAttribute>() != null)
+      {
+        AssignMember(target, member, node);
+      }
+
+      if (member.GetCustomAttribute<SourceAttribute>() != null)
+      {
+        AssignMember(target, member, node.SourceCode());
+      }
+      if (member.GetCustomAttribute<RangeAttribute>() != null)
+      {
+        AssignMember(target, member, node.CalculatePosition());
+      }
+    }
+  }
+
   private static void AssignMember(object target, MemberInfo member, object value)
   {
     if (member is FieldInfo field)
@@ -95,28 +115,11 @@ public static class Transformer
     if (transformType != null)
     {
       var value = (
-        transformType.GetConstructor(new Type[] { typeof(ASTNode) })?.Invoke(new object[] { node })
-        ?? transformType.GetConstructor(new Type[] { })?.Invoke(new object[] { })
+        transformType.GetConstructor([typeof(ASTNode)])?.Invoke([node])
+        ?? transformType.GetConstructor([])?.Invoke([])
       ).NotNull();
 
-      foreach (var member in transformType.GetMembers())
-      {
-        if (member.GetCustomAttribute<ASTAttribute>() != null)
-        {
-          if (member is FieldInfo field)
-          {
-            field.SetValue(value, node);
-          }
-          else if (member is PropertyInfo property)
-          {
-            property.SetValue(value, node);
-          }
-          else
-          {
-            throw new NotImplementedException();
-          }
-        }
-      }
+      AssignTransformedMembers(value, node);
 
       return value!;
     }
@@ -182,13 +185,7 @@ public static class Transformer
       if (nodeValue is ASTTransformer transformer)
       {
         nodeValue = transformer.Transform();
-        foreach (var member in nodeValue.GetType().GetMembers())
-        {
-          if (member.GetCustomAttribute<ASTAttribute>() != null)
-          {
-            AssignMember(nodeValue, member, node);
-          }
-        }
+        AssignTransformedMembers(nodeValue.GetType().GetMembers(), node);
       }
       while (nodeValue is ASTSimplifier simplifier && simplifier.TrySimplify(out var simplified))
       {

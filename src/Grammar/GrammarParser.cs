@@ -31,6 +31,7 @@ public class GrammarParser
   /// <param name="sourceFiles"></param>
   /// <param name="stringToLexon"></param>
   /// <returns></returns>
+  [Obsolete("Use ParseGrammar(string)")]
   public static ProductionSet[] ParseGrammar(
     string[] sourceFiles,
     Func<string, string> stringToLexon
@@ -46,6 +47,7 @@ public class GrammarParser
   /// <param name="code"></param>
   /// <param name="stringToLexon"></param>
   /// <returns></returns>
+  [Obsolete("Use ParseGrammar(string)")]
   internal static ProductionRule[] Parse(string code, Func<string, string> stringToLexon)
   {
     var lexons = LexerStatic
@@ -56,21 +58,40 @@ public class GrammarParser
     return GenerateRuleParser(queue).UntilNull().ToArray();
   }
 
-  public static LanguageGrammar TestParse(string code)
+  /// <summary>
+  /// Parse a grammar specification and return a LanguageGrammar for the specification.
+  /// </summary>
+  /// <param name="code"></param>
+  /// <returns></returns>
+  public static LanguageGrammar ParseGrammar(string code)
   {
+    // Lex source code
     var lexons = LexerStatic.Lex(code, GrammarLexonRules.LexonRules);
 
-    var grammarProductionRules = GrammarFileGrammar.ProductionRules;
-    var grammarProductionSets = ProductionSet.FromProductionRules(grammarProductionRules);
+    // Generate a parser for source code
+    var parser = GenerateGrammarParser();
 
-    var parser = new Parser(grammarProductionSets);
+    // Parse the grammar specifiction and get the root node.
     var grammarNode = parser.Parse("Grammar", lexons.Filter(x => x.isSemantic))!;
 
+    return TransformASTToGrammar(grammarNode);
+  }
+
+  /// <summary>
+  /// Transform an AST for a grammar specification to a language grammar
+  /// </summary>
+  /// <param name="grammarNode"></param>
+  /// <returns></returns>
+  private static LanguageGrammar TransformASTToGrammar(ASTNode grammarNode)
+  {
+    // Get the set of grammar statements
     var grammarStarNode = grammarNode.Match("GrammarStatement*");
 
+    // Construct lists for outputs
     List<ProductionRule> productionRules = new List<ProductionRule>();
     List<LexonRule> lexonRules = new List<LexonRule>();
 
+    // Iterate through each statement and extract the relevant specifications.
     foreach (var child in grammarStarNode!.children)
     {
       if (TryGetProductionRule(child, out var productionRule))
@@ -83,11 +104,19 @@ public class GrammarParser
       }
     }
 
+    // Find the root symbol for the specified grammar.
     var rootSymbol = productionRules
       .FirstOrDefault(x => x.rootSymbol)
       .NotNull("Language must have a root symbol defined.")
       .name;
 
+    /// <summary>
+    /// Construct output and return it.
+    /// </summary>
+    /// <param name="rootSymbol"></param>
+    /// <param name="lexonRules.ToArray()"></param>
+    /// <param name="ProductionSet.FromProductionRules(productionRules"></param>
+    /// <returns></returns>
     return new LanguageGrammar(
       rootSymbol,
       lexonRules.ToArray(),
@@ -95,6 +124,22 @@ public class GrammarParser
     );
   }
 
+  private static Parser GenerateGrammarParser()
+  {
+    var grammarProductionSets = ProductionSet.FromProductionRules(
+      GrammarFileGrammar.ProductionRules
+    );
+
+    var parser = new Parser(grammarProductionSets);
+    return parser;
+  }
+
+  /// <summary>
+  /// Try to get a production rule for a specific AST node.
+  /// </summary>
+  /// <param name="astNode"></param>
+  /// <param name="productionRule"></param>
+  /// <returns></returns>
   private static bool TryGetProductionRule(ASTNode astNode, out ProductionRule productionRule)
   {
     if (astNode.TryMatch(RuleNames.ProductionRule, out var productionRuleNode))
@@ -132,6 +177,12 @@ public class GrammarParser
     return false;
   }
 
+  /// <summary>
+  /// Try to get a lexon rule for a particular ASTNode.
+  /// </summary>
+  /// <param name="astNode"></param>
+  /// <param name="lexonRule"></param>
+  /// <returns></returns>
   private static bool TryGetLexonRule(ASTNode astNode, out LexonRule lexonRule)
   {
     if (astNode.TryMatch(RuleNames.LexonRule, out var lexonNode))
